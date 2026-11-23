@@ -1,0 +1,18 @@
+{
+  "name": "CliniVault Hybrid",
+  "short_name": "CliniVault",
+  "description": "Privacy-first medical and lab note triage PWA using on-device local redaction plus cloud clinical synthesis.",
+  "start_url": "/",
+  "scope": "/",
+  "display": "standalone",
+  "theme_color": "#0f766e",
+  "background_color": "#f1f5f9",
+  "icons": [
+    {
+      "src": "/icon.svg",
+      "sizes": "any",
+      "type": "image/svg+xml",
+      "purpose": "any maskable"
+    }
+  ]
+}

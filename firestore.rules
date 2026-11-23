@@ -1,0 +1,92 @@
+rules_version = '2';
+service cloud.firestore {
+  match /databases/{database}/documents {
+    match /{document=**} {
+      allow read, write: if false;
+    }
+
+    function isOwner(uid) {
+      return request.auth != null && request.auth.uid == uid;
+    }
+
+    function isValidVaultRecord(data, uid) {
+      return data.keys().hasOnly([
+          'uid',
+          'title',
+          'documentType',
+          'urgencyLevel',
+          'redactedText',
+          'redactedCategories',
+          'redactionCount',
+          'plainLanguageSummary',
+          'keyFindings',
+          'actionChecklist',
+          'cloudSynthesis',
+          'stage1Source',
+          'stage2Source',
+          'createdAt',
+          'updatedAt'
+        ])
+        && data.keys().hasAll([
+          'uid',
+          'title',
+          'documentType',
+          'urgencyLevel',
+          'redactedText',
+          'redactedCategories',
+          'redactionCount',
+          'plainLanguageSummary',
+          'keyFindings',
+          'actionChecklist',
+          'cloudSynthesis',
+          'stage1Source',
+          'stage2Source',
+          'createdAt',
+          'updatedAt'
+        ])
+        && data.uid is string
+        && data.uid == uid
+        && data.title is string
+        && data.title.size() > 0
+        && data.title.size() <= 160
+        && data.documentType in [
+          'lab_report',
+          'prescription',
+          'discharge_summary',
+          'clinical_note',
+          'photo_scan'
+        ]
+        && data.urgencyLevel in ['routine', 'follow_up_soon', 'urgent_review']
+        && data.redactedText is string
+        && data.redactedText.size() > 0
+        && data.redactedText.size() <= 12000
+        && data.redactedCategories is list
+        && data.redactedCategories.size() <= 20
+        && data.redactionCount is int
+        && data.redactionCount >= 0
+        && data.redactionCount <= 500
+        && data.plainLanguageSummary is string
+        && data.plainLanguageSummary.size() <= 2000
+        && data.keyFindings is list
+        && data.keyFindings.size() <= 30
+        && data.actionChecklist is list
+        && data.actionChecklist.size() <= 20
+        && data.cloudSynthesis is string
+        && data.cloudSynthesis.size() <= 12000
+        && data.stage1Source in ['ON_DEVICE', 'IN_CLOUD']
+        && data.stage2Source in ['NONE', 'IN_CLOUD', 'ON_DEVICE']
+        && data.createdAt is timestamp
+        && data.updatedAt is timestamp;
+    }
+
+    match /users/{uid}/vaultRecords/{recordId} {
+      allow read, delete: if isOwner(uid);
+      allow create: if isOwner(uid) && isValidVaultRecord(request.resource.data, uid);
+      allow update: if isOwner(uid)
+        && resource.data.uid == uid
+        && request.resource.data.uid == resource.data.uid
+        && request.resource.data.createdAt == resource.data.createdAt
+        && isValidVaultRecord(request.resource.data, uid);
+    }
+  }
+}

@@ -1,0 +1,39 @@
+{
+  "parameters": {
+    "cloud_model_name": {
+      "defaultValue": {
+        "value": "gemini-3.5-flash-lite"
+      },
+      "description": "Primary cloud synthesis model used via Firebase AI Logic",
+      "valueType": "STRING"
+    },
+    "fast_cloud_model_name": {
+      "defaultValue": {
+        "value": "gemini-3.5-flash-lite"
+      },
+      "description": "Fast cloud fallback model when on-device Gemini Nano 4 is unavailable in Stage 1",
+      "valueType": "STRING"
+    },
+    "default_triage_mode": {
+      "defaultValue": {
+        "value": "PREFER_ON_DEVICE"
+      },
+      "description": "Default Stage 1 Firebase AI Logic hybrid inference mode",
+      "valueType": "STRING"
+    },
+    "max_cloud_output_tokens": {
+      "defaultValue": {
+        "value": "2048"
+      },
+      "description": "Maximum tokens allowed for Stage 2 clinical prep synthesis streaming",
+      "valueType": "STRING"
+    },
+    "enable_cloud_synthesis": {
+      "defaultValue": {
+        "value": "true"
+      },
+      "description": "Feature flag enabling Stage 2 de-identified cloud synthesis",
+      "valueType": "STRING"
+    }
+  }
+}

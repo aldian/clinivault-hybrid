@@ -1,0 +1,10 @@
+node_modules/
+dist/
+.firebase/
+.env.local
+.env.*.local
+*.log
+.DS_Store
+.agents/
+skills-lock.json
+submission_drafts/
